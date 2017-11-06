@@ -7,10 +7,32 @@
     <body>
         <div id="output"></div>
         <script>
+            navigator.serviceWorker.register('sw.js');
+
+            function showNotification(text) {
+                Notification.requestPermission(result => {
+                    if (result === 'granted') {
+                        navigator.serviceWorker.ready.then(registration => {
+                            registration.showNotification('Vibration Sample', {
+                                body: text,
+                                //icon: '../images/touch/chrome-touch-icon-192x192.png',
+                                vibrate: [200, 100, 200, 100, 200, 100, 200],
+                                tag: 'vibration-sample'
+                            });
+                        });
+                    }
+                });
+            }
+
             const output = document.getElementById('output');
+            var curDate = new Date(), prevDate;
 
             function geo_success(position) {
-                output.innerHTML = position.coords.latitude + ' ' + position.coords.longitude;
+                prevDate = curDate;
+                curDate = new Date();
+                if (curDate - prevDate > 3000) {
+                    showNotification(position.coords.latitude + ' ' + position.coords.longitude);
+                }
             }
 
             function geo_error() {
