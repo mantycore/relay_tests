@@ -9,19 +9,29 @@
         <script>
             navigator.serviceWorker.register('sw.js');
 
+            function boldlyShowNotification(text) {
+                navigator.serviceWorker.ready.then(registration => {
+                    registration.showNotification('Vibration Sample', {
+                        body: text,
+                        //icon: '../images/touch/chrome-touch-icon-192x192.png',
+                        vibrate: [200, 100, 200, 100, 200, 100, 200],
+                        tag: 'vibration-sample'
+                    });
+                });                
+            }
+
             function showNotification(text) {
-                Notification.requestPermission(result => {
-                    if (result === 'granted') {
-                        navigator.serviceWorker.ready.then(registration => {
-                            registration.showNotification('Vibration Sample', {
-                                body: text,
-                                //icon: '../images/touch/chrome-touch-icon-192x192.png',
-                                vibrate: [200, 100, 200, 100, 200, 100, 200],
-                                tag: 'vibration-sample'
-                            });
-                        });
+                switch (Notification.permission) {
+                    case 'granted': boldlyShowNotification(text); return;
+                    case 'denied': output.innerHTML = "notification denied, message was: " + text; return;
+                    default: Notification.requestPermission(result => {
+                        if (result === 'granted') {
+                            boldlyShowNotification(text);
+                        } else {
+                            output.innerHTML = "notification denied, message was: " + text; return;
+                        }
                     }
-                });
+                }
             }
 
             const output = document.getElementById('output');
