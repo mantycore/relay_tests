@@ -10,7 +10,9 @@
             navigator.serviceWorker.register('sw.js');
 
             function boldlyShowNotification(text) {
+                output.innerHTML = "notification in progress";
                 navigator.serviceWorker.ready.then(registration => {
+                    output.innerHTML = "notification allowed, message is: " + text;
                     registration.showNotification('Vibration Sample', {
                         body: text,
                         //icon: '../images/touch/chrome-touch-icon-192x192.png',
