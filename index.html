@@ -5,12 +5,31 @@
         <title>Relay studies</title>
     </head>
     <body>
+        <div id="output"></div>
         <script>
-            navigator.geolocation.getCurrentPosition(function (position) {
+            const output = document.getElementById('output');
+
+            function geo_success(position) {
+                output.innerHTML = position.coords.latitude + ' ' + position.coords.longitude;
+            }
+
+            function geo_error() {
+                output.innerHTML = "Sorry, no position available.";
+            }
+
+            var geo_options = {
+                enableHighAccuracy: true, 
+                maximumAge        : 30000, 
+                timeout           : 27000
+            };
+
+            var wpid = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
+
+            /*navigator.geolocation.getCurrentPosition(function (position) {
                 alert('' + position.coords.latitude + ' ' + position.coords.longitude);
             }, function (e) {
                 alert(e.message);
-            });
+            });*/
         </script>
     </body>
 </html>
